@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гра: В кого більше число</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #89fffd, #ef32d9);
+            color: #333;
+        }
+        
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Гра: В кого більше число</h1>
+        <p id="greeting"></p>
+        <div id="scores">
+            <p>Гравця <span id="userNameLabel"></span>: <span id="userScore">0</span></p>
+            <p>Комп’ютер: <span id="computerScore">0</span></p>
+        </div>
+        <div id="numbers">
+            <p>Число гравця <span id="userNameLabel2"></span>: <span id="userNumber"></span></p>
+            <p>Число комп’ютера: <span id="computerNumber"></span></p>
+        </div>
+        <p>Прогрес гри: <span id="progress">0 / 3</span></p>
+        <button onclick="playRound()">Грати</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        let userScore = 0;
+        let computerScore = 0;
+        const maxScore = 3;
+        let userName = "";
+
+        function getUserName() {
+            userName = prompt("Введіть ваше ім'я:");
+            document.getElementById('greeting').textContent = `Вітаємо, ${userName}!`;
+            document.getElementById('userNameLabel').textContent = userName;
+            document.getElementById('userNameLabel2').textContent = userName;
+        }
+
+        function getRandomNumber() {
+            return Math.floor(Math.random() * 10) + 1;
+        }
+
+        function playRound() {
+            const userNumber = getRandomNumber();
+            const computerNumber = getRandomNumber();
+
+            const userNumberElement = document.getElementById('userNumber');
+            const computerNumberElement = document.getElementById('computerNumber');
+
+            userNumberElement.textContent = userNumber;
+            computerNumberElement.textContent = computerNumber;
+
+            userNumberElement.classList.add('fade-in');
+            computerNumberElement.classList.add('fade-in');
+
+            setTimeout(() => {
+                userNumberElement.classList.remove('fade-in');
+                computerNumberElement.classList.remove('fade-in');
+            }, 500);
+
+            if (userNumber > computerNumber) {
+                userScore++;
+                document.getElementById('result').textContent = "Ви виграли раунд!";
+            } else if (userNumber < computerNumber) {
+                computerScore++;
+                document.getElementById('result').textContent = "Комп'ютер виграв раунд!";
+            } else {
+                document.getElementById('result').textContent = "Нічия!";
+            }
+
+            document.getElementById('userScore').textContent = userScore;
+            document.getElementById('computerScore').textContent = computerScore;
+            document.getElementById('progress').textContent = `${Math.max(userScore, computerScore)} / ${maxScore}`;
+
+            checkWinner();
+        }
+
+        function checkWinner() {
+            if (userScore === maxScore) {
+                document.getElementById('result').textContent = "Ви перемогли в грі!";
+                resetGame();
+            } else if (computerScore === maxScore) {
+                document.getElementById('result').textContent = "Комп'ютер переміг в грі!";
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            userScore = 0;
+            computerScore = 0;
+            document.getElementById('userScore').textContent = userScore;
+            document.getElementById('computerScore').textContent = computerScore;
+            document.getElementById('userNumber').textContent = '';
+            document.getElementById('computerNumber').textContent = '';
+            document.getElementById('progress').textContent = `0 / ${maxScore}`;
+        }
+
+        window.onload = getUserName;
+    </script>
+</body>
+</html>
